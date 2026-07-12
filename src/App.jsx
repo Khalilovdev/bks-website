@@ -134,7 +134,7 @@ const L = {
     contactSub: "Savolingiz bormi? Qo'ng'iroq qiling yoki Telegram'da yozing — tez javob beramiz.",
     contactLabels: { phone: "Telefon", tg: "Telegram", address: "Manzil", hours: "Ish vaqti" },
     contactCtaTitle: "Buyurtma berishga tayyormisiz?",
-    contactCtaSub: "Ism va raqamingizni qoldiring — o'zimiz aloqaga chiqamiz. Yoki Telegram'da to'g'ridan-to'g'ri yozing.",
+    contactCtaSub: "Ism va raqamingizni kiriting — «Yuborish» tayyor xabar bilan Telegram'ni ochadi, u yerda yuborishni bosing. Yoki to'g'ridan-to'g'ri qo'ng'iroq qiling.",
     formName: "Ismingiz",
     formPhone: "Telefon raqamingiz",
     formSend: "Yuborish",
@@ -217,7 +217,7 @@ const L = {
     contactSub: "Есть вопросы? Позвоните или напишите в Telegram — ответим быстро.",
     contactLabels: { phone: "Телефон", tg: "Telegram", address: "Адрес", hours: "Время работы" },
     contactCtaTitle: "Готовы оформить заказ?",
-    contactCtaSub: "Оставьте имя и номер — мы сами свяжемся с вами. Или напишите напрямую в Telegram.",
+    contactCtaSub: "Введите имя и номер — «Отправить» откроет Telegram с готовым сообщением, отправьте его там. Или позвоните напрямую.",
     formName: "Ваше имя",
     formPhone: "Ваш телефон",
     formSend: "Отправить",
@@ -408,7 +408,7 @@ function HeroArt() {
 
 /* ---------- YUGURUVCHI LENTA ---------- */
 function TickerStrip({ t }) {
-  const items = [...t.ticker, ...t.ticker]; // uzluksiz aylanish uchun 2x
+  const items = [...t.ticker, ...t.ticker, ...t.ticker, ...t.ticker]; // 4x — keng ekranlarda ham bo'shliqsiz
   return (
     <div
       className="overflow-hidden py-4 select-none"
@@ -487,8 +487,15 @@ export default function BKSSite() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem("bks-theme", theme); } catch { /* e'tiborsiz */ }
   }, [theme]);
+
+  /* Tanlov faqat foydalanuvchi tugmani bosganda saqlanadi —
+     aks holda har tashrifda qurilma sozlamasiga ergashaveradi */
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try { localStorage.setItem("bks-theme", next); } catch { /* e'tiborsiz */ }
+  };
 
   const navItems = t.nav
     .map((label, i) => ({ label, href: NAV_LINKS[i] }))
@@ -548,7 +555,7 @@ export default function BKSSite() {
         }
         html[data-theme="light"] {
           --ink: #f6f4ef; --ink2: #edeae3; --surface: #ffffff; --line: #ddd8cf;
-          --text: #171410; --muted: #6d6a62; --gold: #b97e0a;
+          --text: #171410; --muted: #6d6a62; --gold: #9a6a06;
           --gold-grad: linear-gradient(135deg, #f0b428 0%, #dd9709 45%, #c07f00 100%);
           --nav-bg: rgba(246,244,239,.86);
           --panel-line: rgba(20,15,5,.05); --panel-dot: rgba(20,15,5,.10);
@@ -690,7 +697,7 @@ export default function BKSSite() {
 
             {/* Tungi/kunduzgi rejim tugmasi */}
             <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={toggleTheme}
               aria-label={
                 theme === "dark"
                   ? (lang === "uz" ? "Kunduzgi rejim" : "Дневной режим")
@@ -1027,7 +1034,8 @@ function CalculatorSection({ lang, t }) {
             </div>
 
             <button onClick={orderViaTg}
-              className="btn-gold mt-auto rounded-xl px-6 py-4 font-bold text-base">
+              disabled={volume <= 0}
+              className="btn-gold mt-auto rounded-xl px-6 py-4 font-bold text-base disabled:opacity-40 disabled:cursor-not-allowed">
               {t.calcOrderTg} →
             </button>
             {copied && (
@@ -1051,14 +1059,14 @@ function CalculatorSection({ lang, t }) {
 /* ---------- KATALOG BO'LIMI ---------- */
 function CatalogSection({ lang, t }) {
   const [active, setActive] = useState("all");
-  const [copiedIdx, setCopiedIdx] = useState(-1);
+  const [copiedId, setCopiedId] = useState("");
   const list = active === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.cat === active);
 
-  const orderProduct = (p, i) => {
+  const orderProduct = (p) => {
     const name = lang === "uz" ? p.uz : p.ru;
     sendOrder(`${t.orderMsgIntro}\n• ${name}`, () => {
-      setCopiedIdx(i);
-      setTimeout(() => setCopiedIdx(-1), 8000);
+      setCopiedId(p.uz); // indeks emas, mahsulotning o'zi — tab almashsa ham adashmaydi
+      setTimeout(() => setCopiedId(""), 8000);
     });
   };
 
@@ -1140,10 +1148,10 @@ function CatalogSection({ lang, t }) {
                 {lang === "uz" ? p.duz : p.dru}
               </p>
               <button
-                onClick={() => orderProduct(p, i)}
+                onClick={() => orderProduct(p)}
                 className="btn-ghost w-full rounded-lg px-4 py-2.5 text-sm font-bold"
               >
-                {copiedIdx === i ? "✓" : t.orderBtn}
+                {copiedId === p.uz ? "✓" : t.orderBtn}
               </button>
             </article>
           ))}
@@ -1205,7 +1213,7 @@ const WHY_ICONS = [
 
 function WhySection({ t }) {
   return (
-    <section style={{ background: T.ink }}>
+    <section style={{ background: T.ink2, borderTop: `1px solid ${T.line}` }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <h2 className="sec-title font-black mb-10" style={{ fontFamily: F.display, fontSize: "clamp(1.6rem, 4vw, 2.6rem)", color: T.text }}>
           {t.whyTitle}
