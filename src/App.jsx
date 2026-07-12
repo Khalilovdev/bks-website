@@ -134,7 +134,14 @@ const L = {
     contactSub: "Savolingiz bormi? Qo'ng'iroq qiling yoki Telegram'da yozing — tez javob beramiz.",
     contactLabels: { phone: "Telefon", tg: "Telegram", address: "Manzil", hours: "Ish vaqti" },
     contactCtaTitle: "Buyurtma berishga tayyormisiz?",
-    contactCtaSub: "Telegram orqali bir daqiqada buyurtma bering — xabaringiz menejerga darhol yetib boradi.",
+    contactCtaSub: "Ism va raqamingizni qoldiring — o'zimiz aloqaga chiqamiz. Yoki Telegram'da to'g'ridan-to'g'ri yozing.",
+    formName: "Ismingiz",
+    formPhone: "Telefon raqamingiz",
+    formSend: "Yuborish",
+    formCall: "Qo'ng'iroq qilish",
+    formMsgIntro: "Assalomu alaykum! Menga aloqaga chiqishingizni so'rayman:",
+    formNameLabel: "Ism",
+    formPhoneLabel: "Telefon",
     footerTagline: "Sement va beton mahsulotlari — Samarqand.",
     footerRights: "Barcha huquqlar himoyalangan.",
     galleryTitle: "Galereya",
@@ -210,7 +217,14 @@ const L = {
     contactSub: "Есть вопросы? Позвоните или напишите в Telegram — ответим быстро.",
     contactLabels: { phone: "Телефон", tg: "Telegram", address: "Адрес", hours: "Время работы" },
     contactCtaTitle: "Готовы оформить заказ?",
-    contactCtaSub: "Оформите заказ через Telegram за минуту — сообщение сразу попадёт к менеджеру.",
+    contactCtaSub: "Оставьте имя и номер — мы сами свяжемся с вами. Или напишите напрямую в Telegram.",
+    formName: "Ваше имя",
+    formPhone: "Ваш телефон",
+    formSend: "Отправить",
+    formCall: "Позвонить",
+    formMsgIntro: "Здравствуйте! Прошу связаться со мной:",
+    formNameLabel: "Имя",
+    formPhoneLabel: "Телефон",
     footerTagline: "Цемент и бетонные изделия — Самарканд.",
     footerRights: "Все права защищены.",
     galleryTitle: "Галерея",
@@ -864,6 +878,24 @@ export default function BKSSite() {
         </div>
       </footer>
 
+      {/* Suzuvchi qo'ng'iroq tugmasi */}
+      <a
+        href={CONTACT.phoneHref}
+        aria-label={t.contactLabels.phone}
+        className="fixed right-5 z-50 w-14 h-14 rounded-full flex items-center justify-center"
+        style={{
+          bottom: "5.75rem",
+          background: T.surface,
+          border: `1px solid ${goldA(45)}`,
+          boxShadow: "0 8px 22px rgba(0,0,0,.35)",
+          color: T.gold,
+        }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+          {CONTACT_ICONS.phone}
+        </svg>
+      </a>
+
       {/* Suzuvchi Telegram tugmasi */}
       <a
         href={`https://t.me/${TG_USERNAME}`}
@@ -1322,6 +1354,22 @@ const CONTACT_ICONS = {
 };
 
 function ContactSection({ lang, t }) {
+  /* Qayta aloqa formasi: xabar clipboardga + Telegram chatiga */
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [sent, setSent] = useState("");
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    const m = `${t.formMsgIntro}\n• ${t.formNameLabel}: ${name.trim()}\n• ${t.formPhoneLabel}: ${phone.trim()}`;
+    setSent(m);
+    sendOrder(m, () => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 8000);
+    });
+  };
+
   const items = [
     { key: "phone", value: CONTACT.phone, href: CONTACT.phoneHref },
     { key: "tg", value: `@${TG_USERNAME}`, href: `https://t.me/${TG_USERNAME}` },
@@ -1394,15 +1442,55 @@ function ContactSection({ lang, t }) {
             <h3 className="font-black text-xl sm:text-2xl mb-3" style={{ fontFamily: F.display, color: T.text }}>
               {t.contactCtaTitle}
             </h3>
-            <p className="text-sm sm:text-base mb-7" style={{ color: T.muted }}>{t.contactCtaSub}</p>
-            <a
-              href={`https://t.me/${TG_USERNAME}`}
-              target="_blank" rel="noopener noreferrer"
-              className="btn-gold rounded-xl px-7 py-4 text-center font-bold"
-              style={{ textDecoration: "none" }}
-            >
-              {t.calcOrderTg} →
-            </a>
+            <p className="text-sm sm:text-base mb-6" style={{ color: T.muted }}>{t.contactCtaSub}</p>
+
+            {/* Qayta aloqa formasi */}
+            <form onSubmit={submitForm} className="flex flex-col gap-4">
+              <div className={`ffield ${name !== "" ? "filled" : ""}`}>
+                <input
+                  id="cta-name"
+                  type="text" autoComplete="name" required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-xl px-4 text-base font-semibold"
+                  style={{ background: T.ink, color: T.text, border: `1px solid ${T.line}` }}
+                />
+                <label htmlFor="cta-name">{t.formName}</label>
+              </div>
+              <div className={`ffield ${phone !== "" ? "filled" : ""}`}>
+                <input
+                  id="cta-phone"
+                  type="tel" inputMode="tel" autoComplete="tel" required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full rounded-xl px-4 text-base font-semibold"
+                  style={{ background: T.ink, color: T.text, border: `1px solid ${T.line}`, fontFamily: F.mono }}
+                />
+                <label htmlFor="cta-phone">{t.formPhone}</label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button type="submit" className="btn-gold flex-1 rounded-xl px-6 py-3.5 font-bold">
+                  {t.formSend} →
+                </button>
+                <a
+                  href={CONTACT.phoneHref}
+                  className="btn-ghost flex-1 rounded-xl px-6 py-3.5 text-center font-bold"
+                  style={{ textDecoration: "none" }}
+                >
+                  {t.formCall}
+                </a>
+              </div>
+            </form>
+            {copied && (
+              <div className="mt-3 text-sm text-center font-medium" style={{ color: "var(--success)" }}>
+                ✓ {t.calcCopied}
+              </div>
+            )}
+            {sent && (
+              <div className="mt-3 text-xs rounded-xl px-4 py-3" style={{ background: T.ink, color: T.muted, whiteSpace: "pre-line" }}>
+                {sent}
+              </div>
+            )}
           </div>
         </div>
 
