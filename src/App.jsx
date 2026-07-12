@@ -132,7 +132,7 @@ const L = {
     navCta: "Заказать",
     heroEyebrow: "Beton Klass Savdo · Самарканд",
     heroLine1: "БЕТОН.",
-    heroLine2: "ТОЧНО.",
+    heroLine2: "КАЧЕСТВО.",
     heroLine3: "В СРОК.",
     heroSub:
       "Цемент, готовый бетон и ЖБИ — от заказа до доставки всё в одном месте.",
@@ -483,6 +483,14 @@ export default function BKSSite() {
         .fu-3 { animation-delay: .25s } .fu-4 { animation-delay: .4s }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: none } }
         @media (prefers-reduced-motion: reduce) { .fade-up { animation: none } }
+        /* Hero shrifti: eng uzun so'z («VAQTIDA.» / «КАЧЕСТВО.») ustunga sig'ishi shart —
+           gold-text (background-clip) ustundan chiqqan qismni ko'rinmas qilib kesadi */
+        .hero-h1 { font-size: clamp(2.8rem, 8vw, 6rem); }
+        html[lang="ru"] .hero-h1 { font-size: clamp(2.4rem, 11.5vw, 6rem); }
+        @media (min-width: 1024px) {
+          .hero-h1 { font-size: clamp(3rem, 7.3vw, 5.3rem); }
+          html[lang="ru"] .hero-h1 { font-size: clamp(3rem, 5.9vw, 4.25rem); }
+        }
         .gold-text {
           background: ${T.goldGrad};
           -webkit-background-clip: text; background-clip: text;
@@ -582,6 +590,7 @@ export default function BKSSite() {
                 <button
                   key={code}
                   onClick={() => setLang(code)}
+                  aria-pressed={lang === code}
                   className="px-3.5 py-2.5 uppercase"
                   style={{
                     background: lang === code ? T.goldGrad : "transparent",
@@ -641,8 +650,8 @@ export default function BKSSite() {
             </p>
 
             <h1
-              className="fade-up fu-2 font-black select-none"
-              style={{ fontFamily: F.display, fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 0.95 }}
+              className="hero-h1 fade-up fu-2 font-black select-none"
+              style={{ fontFamily: F.display, lineHeight: 0.95 }}
             >
               <span className="block" style={{ color: T.text }}>
                 {t.heroLine1.replace(/\.$/, "")}<span className="gold-text">.</span>
@@ -967,7 +976,7 @@ function CatalogSection({ lang, t }) {
               {/* suv belgisi — mahsulot bosh harfi */}
               {(() => {
                 const n = lang === "uz" ? p.uz : p.ru;
-                const tkn = (n.match(/M\d+|KS-\d+/) || [n.charAt(0)])[0];
+                const tkn = (n.match(/[MМ]\d+|[KК][SС]-\d+/) || [n.charAt(0)])[0];
                 return (
                   <span
                     className="watermark"
