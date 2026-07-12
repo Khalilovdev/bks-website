@@ -6,17 +6,22 @@ import { useState, useEffect, useRef } from "react";
    · Nega biz · Sharhlar · FAQ · Aloqa · Footer  (UZ/RU)
    ============================================================ */
 
-/* ---------- DIZAYN TOKENLARI ---------- */
+/* ---------- DIZAYN TOKENLARI ----------
+   Qiymatlar CSS o'zgaruvchilarda (quyidagi <style> blokida) —
+   tungi/kunduzgi rejim shu tokenlar orqali almashadi. */
 const T = {
-  ink: "#0e0e0e",          // asosiy fon
-  ink2: "#151515",         // ikkinchi qatlam
-  surface: "#1d1d1d",      // kartochkalar
-  line: "#2a2a2a",         // chegaralar
-  gold: "#f5a623",         // asosiy urg'u (logo rangi)
-  text: "#f5f5f4",
-  muted: "#9c9a96",
-  goldGrad: "linear-gradient(135deg, #ffc933 0%, #f5a623 45%, #e08e00 100%)",
+  ink: "var(--ink)",          // asosiy fon
+  ink2: "var(--ink2)",        // ikkinchi qatlam
+  surface: "var(--surface)",  // kartochkalar
+  line: "var(--line)",        // chegaralar
+  gold: "var(--gold)",        // asosiy urg'u (logo rangi)
+  text: "var(--text)",
+  muted: "var(--muted)",
+  goldGrad: "var(--gold-grad)",
 };
+
+/* Oltinning shaffof tuslari — ikkala rejimda ham tokenga ergashadi */
+const goldA = (pct) => `color-mix(in srgb, var(--gold) ${pct}%, transparent)`;
 
 const F = {
   display: "'Unbounded', sans-serif",
@@ -300,7 +305,7 @@ function ConcretePanel() {
         <div
           key={x}
           className="absolute top-0 bottom-0 w-px"
-          style={{ left: `${x}%`, background: "rgba(255,255,255,0.06)" }}
+          style={{ left: `${x}%`, background: "var(--panel-line)" }}
         />
       ))}
       {/* forma-bog'lagich doiralari */}
@@ -313,8 +318,8 @@ function ConcretePanel() {
           style={{
             left: `calc(${x}% - 6px)`,
             top: `${y}%`,
-            borderColor: "rgba(255,255,255,0.10)",
-            background: "rgba(0,0,0,0.35)",
+            borderColor: "var(--panel-dot)",
+            background: "var(--panel-dot-bg)",
           }}
         />
       ))}
@@ -325,7 +330,7 @@ function ConcretePanel() {
 /* ---------- HERO ILLYUSTRATSIYASI ----------
    Izometrik beton bloklar + armatura — chiziqli, oltin urg'ular bilan */
 function HeroArt() {
-  const g = "#3a3a3a";
+  const g = "var(--art-stroke)";
   return (
     <div className="hidden lg:flex items-center justify-center float-slow" aria-hidden="true">
       <svg width="380" height="400" viewBox="0 0 400 420" fill="none">
@@ -338,21 +343,21 @@ function HeroArt() {
         ))}
         {/* yuqori blok */}
         <g stroke={g} strokeWidth="1.5">
-          <polygon points="110,170 200,140 290,170 200,200" fill="#202020" />
-          <polygon points="110,170 200,200 200,250 110,220" fill="#181818" />
-          <polygon points="290,170 200,200 200,250 290,220" fill="#141414" />
+          <polygon points="110,170 200,140 290,170 200,200" fill="var(--art-top)" />
+          <polygon points="110,170 200,200 200,250 110,220" fill="var(--art-left)" />
+          <polygon points="290,170 200,200 200,250 290,220" fill="var(--art-right)" />
         </g>
         <polyline points="110,170 200,200 290,170" stroke={T.gold} strokeWidth="2" fill="none" />
         {/* o'rta blok */}
         <g stroke={g} strokeWidth="1.5">
-          <polygon points="70,260 200,215 330,260 200,305" fill="#1e1e1e" />
-          <polygon points="70,260 200,305 200,365 70,320" fill="#161616" />
-          <polygon points="330,260 200,305 200,365 330,320" fill="#121212" />
+          <polygon points="70,260 200,215 330,260 200,305" fill="var(--art-top2)" />
+          <polygon points="70,260 200,305 200,365 70,320" fill="var(--art-left2)" />
+          <polygon points="330,260 200,305 200,365 330,320" fill="var(--art-right2)" />
         </g>
         <polyline points="70,260 200,305 330,260" stroke={T.gold} strokeWidth="2" fill="none" />
         {/* forma-bog'lagich doiralari */}
         {[[110, 300], [160, 322], [240, 322], [290, 300]].map(([cx, cy], i) => (
-          <circle key={i} cx={cx} cy={cy} r="4" stroke={g} strokeWidth="1.5" fill="#0e0e0e" />
+          <circle key={i} cx={cx} cy={cy} r="4" stroke={g} strokeWidth="1.5" fill="var(--ink)" />
         ))}
         {/* pastki soya chizig'i */}
         <line x1="55" y1="392" x2="345" y2="392" stroke={g} strokeWidth="1" opacity="0.6" />
@@ -432,6 +437,20 @@ export default function BKSSite() {
   const t = L[lang];
   const [menuOpen, setMenuOpen] = useState(false);
 
+  /* Tungi/kunduzgi rejim: saqlangan tanlov → bo'lmasa qurilma sozlamasi */
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem("bks-theme");
+      if (saved === "dark" || saved === "light") return saved;
+    } catch { /* localStorage yopiq bo'lishi mumkin */ }
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem("bks-theme", theme); } catch { /* e'tiborsiz */ }
+  }, [theme]);
+
   const navItems = t.nav
     .map((label, i) => ({ label, href: NAV_LINKS[i] }))
     .filter((it) => SHOW_REVIEWS || it.href !== "#reviews");
@@ -475,7 +494,32 @@ export default function BKSSite() {
     <div style={{ background: T.ink, color: T.text, fontFamily: F.body, minHeight: "100vh" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@600&display=swap&subset=cyrillic');
-        html { scroll-behavior: smooth; }
+        /* ---------- REJIM TOKENLARI ---------- */
+        :root {
+          --ink: #0e0e0e; --ink2: #151515; --surface: #1d1d1d; --line: #2a2a2a;
+          --text: #f5f5f4; --muted: #9c9a96; --gold: #f5a623;
+          --gold-grad: linear-gradient(135deg, #ffc933 0%, #f5a623 45%, #e08e00 100%);
+          --nav-bg: rgba(14,14,14,.86);
+          --panel-line: rgba(255,255,255,.06); --panel-dot: rgba(255,255,255,.10);
+          --panel-dot-bg: rgba(0,0,0,.35);
+          --art-stroke: #3a3a3a; --art-top: #202020; --art-left: #181818; --art-right: #141414;
+          --art-top2: #1e1e1e; --art-left2: #161616; --art-right2: #121212;
+          --success: #22c55e;
+          color-scheme: dark;
+        }
+        html[data-theme="light"] {
+          --ink: #f6f4ef; --ink2: #edeae3; --surface: #ffffff; --line: #ddd8cf;
+          --text: #171410; --muted: #6d6a62; --gold: #b97e0a;
+          --gold-grad: linear-gradient(135deg, #f0b428 0%, #dd9709 45%, #c07f00 100%);
+          --nav-bg: rgba(246,244,239,.86);
+          --panel-line: rgba(20,15,5,.05); --panel-dot: rgba(20,15,5,.10);
+          --panel-dot-bg: rgba(20,15,5,.04);
+          --art-stroke: #b5b0a6; --art-top: #e6e3dc; --art-left: #d8d4cb; --art-right: #ccc7bd;
+          --art-top2: #e2dfd7; --art-left2: #d4d0c6; --art-right2: #c8c3b9;
+          --success: #15803d;
+          color-scheme: light;
+        }
+        html { scroll-behavior: smooth; background: var(--ink); }
         section[id] { scroll-margin-top: 84px; }
         @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
         .fade-up { animation: fadeUp .8s cubic-bezier(.2,.7,.3,1) both; }
@@ -502,7 +546,7 @@ export default function BKSSite() {
         .btn-gold:hover { filter: brightness(1.08); }
         .btn-gold:active { transform: translateY(1px); }
         .btn-ghost { border: 1px solid ${T.line}; color: ${T.text}; transition: border-color .2s, background .2s; }
-        .btn-ghost:hover { border-color: ${T.gold}; background: rgba(245,166,35,.06); }
+        .btn-ghost:hover { border-color: ${T.gold}; background: ${goldA(6)}; }
         :focus-visible { outline: 2px solid ${T.gold}; outline-offset: 2px; }
         /* Bo'lim sarlavhasi ostidagi ogohlantirish belgisi — imzo takrori */
         .sec-title { position: relative; padding-bottom: 14px; }
@@ -513,7 +557,7 @@ export default function BKSSite() {
         }
         /* Kartochka ko'tarilishi */
         .card-lift { transition: transform .25s cubic-bezier(.2,.7,.3,1), border-color .25s; }
-        .card-lift:hover { transform: translateY(-4px); border-color: rgba(245,166,35,.45) !important; }
+        .card-lift:hover { transform: translateY(-4px); border-color: ${goldA(45)} !important; }
         @media (prefers-reduced-motion: reduce) { .card-lift:hover { transform: none } }
         /* Yuguruvchi lenta */
         .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
@@ -552,14 +596,17 @@ export default function BKSSite() {
           font-family: 'JetBrains Mono', monospace;
         }
         .ffield input { padding-top: 26px; padding-bottom: 10px; }
-        .ffield input:focus { border-color: rgba(245,166,35,.55) !important; }
+        .ffield input:focus { border-color: ${goldA(55)} !important; }
         @media (prefers-reduced-motion: reduce) { .ffield > label { transition: none } }
+        /* Xarita: tungida invert qilinadi, kunduzgida faqat kulrang */
+        .map-frame { filter: grayscale(1) invert(0.92) contrast(0.9); }
+        html[data-theme="light"] .map-frame { filter: grayscale(1); }
       `}</style>
 
       {/* ================= NAVBAR ================= */}
       <header
         className="sticky top-0 z-50"
-        style={{ background: "rgba(14,14,14,.86)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${T.line}` }}
+        style={{ background: "var(--nav-bg)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${T.line}` }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {/* Logo */}
@@ -601,6 +648,31 @@ export default function BKSSite() {
                 </button>
               ))}
             </div>
+
+            {/* Tungi/kunduzgi rejim tugmasi */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label={
+                theme === "dark"
+                  ? (lang === "uz" ? "Kunduzgi rejim" : "Дневной режим")
+                  : (lang === "uz" ? "Tungi rejim" : "Ночной режим")
+              }
+              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+              style={{ border: `1px solid ${T.line}`, color: T.muted }}
+            >
+              {theme === "dark" ? (
+                /* quyosh — kunduzgiga o'tish */
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="4.2" />
+                  <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19" />
+                </svg>
+              ) : (
+                /* oy — tungiga o'tish */
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.4 14.2A8.4 8.4 0 019.8 3.6a8.4 8.4 0 1010.6 10.6z" />
+                </svg>
+              )}
+            </button>
 
             <a href="#contact" className="btn-gold hidden sm:inline-block rounded-lg px-4 py-2 text-sm font-bold" style={{ textDecoration: "none" }}>
               {t.navCta}
@@ -686,7 +758,7 @@ export default function BKSSite() {
           className="h-1.5"
           style={{
             background:
-              "repeating-linear-gradient(45deg, #f5a623 0 14px, #0e0e0e 14px 28px)",
+              "repeating-linear-gradient(45deg, var(--gold) 0 14px, var(--ink) 14px 28px)",
             opacity: 0.85,
           }}
         />
@@ -742,7 +814,7 @@ export default function BKSSite() {
         <div
           className="h-1.5"
           style={{
-            background: "repeating-linear-gradient(45deg, #f5a623 0 14px, #0e0e0e 14px 28px)",
+            background: "repeating-linear-gradient(45deg, var(--gold) 0 14px, var(--ink) 14px 28px)",
             opacity: 0.85,
           }}
         />
@@ -880,7 +952,7 @@ function CalculatorSection({ lang, t }) {
 
           {/* Natija paneli */}
           <div className="lg:col-span-2 rounded-2xl p-5 sm:p-7 flex flex-col"
-            style={{ background: T.surface, border: `1px solid ${T.gold}44` }}>
+            style={{ background: T.surface, border: `1px solid ${goldA(27)}` }}>
             <div className="text-xs uppercase mb-3" style={{ color: T.muted, fontFamily: F.mono, letterSpacing: "0.18em" }}>
               {t.calcResult}
             </div>
@@ -899,7 +971,7 @@ function CalculatorSection({ lang, t }) {
               {t.calcOrderTg} →
             </button>
             {copied && (
-              <div className="mt-3 text-sm text-center font-medium" style={{ color: "#22c55e" }}>
+              <div className="mt-3 text-sm text-center font-medium" style={{ color: "var(--success)" }}>
                 ✓ {t.calcCopied}
               </div>
             )}
@@ -991,7 +1063,7 @@ function CatalogSection({ lang, t }) {
               <div
                 className="absolute top-0 right-0 w-10 h-10 rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity"
                 style={{
-                  background: `linear-gradient(225deg, ${T.gold}33 0%, transparent 55%)`,
+                  background: `linear-gradient(225deg, ${goldA(20)} 0%, transparent 55%)`,
                 }}
                 aria-hidden="true"
               />
@@ -1045,7 +1117,7 @@ function WhySection({ t }) {
             <div key={i} className="flex gap-5 py-7" style={{ borderBottom: `1px solid ${T.line}` }}>
               <div
                 className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
-                style={{ background: `${T.gold}18`, border: `1px solid ${T.gold}33` }}
+                style={{ background: goldA(9), border: `1px solid ${goldA(20)}` }}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={T.gold} strokeWidth="1.8">
                   {WHY_ICONS[i]}
@@ -1140,7 +1212,7 @@ function FAQSection({ t }) {
           {t.faqs.map((f, i) => {
             const on = open === i;
             return (
-              <div key={i} className="rounded-2xl overflow-hidden" style={{ background: T.surface, border: `1px solid ${on ? T.gold + "55" : T.line}` }}>
+              <div key={i} className="rounded-2xl overflow-hidden" style={{ background: T.surface, border: `1px solid ${on ? goldA(33) : T.line}` }}>
                 <button
                   onClick={() => setOpen(on ? -1 : i)}
                   aria-expanded={on}
@@ -1207,7 +1279,7 @@ function ContactSection({ lang, t }) {
                 <>
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                    style={{ background: `${T.gold}18`, border: `1px solid ${T.gold}33` }}
+                    style={{ background: goldA(9), border: `1px solid ${goldA(20)}` }}
                   >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.gold} strokeWidth="1.8">
                       {CONTACT_ICONS[it.key]}
@@ -1246,11 +1318,11 @@ function ContactSection({ lang, t }) {
           {/* CTA kartochka */}
           <div
             className="relative rounded-2xl p-7 sm:p-10 flex flex-col justify-center overflow-hidden"
-            style={{ background: T.surface, border: `1px solid ${T.gold}44` }}
+            style={{ background: T.surface, border: `1px solid ${goldA(27)}` }}
           >
             <div
               className="absolute top-0 right-0 w-40 h-40 pointer-events-none"
-              style={{ background: `radial-gradient(circle at top right, ${T.gold}22, transparent 70%)` }}
+              style={{ background: `radial-gradient(circle at top right, ${goldA(13)}, transparent 70%)` }}
               aria-hidden="true"
             />
             <h3 className="font-black text-xl sm:text-2xl mb-3" style={{ fontFamily: F.display, color: T.text }}>
@@ -1275,7 +1347,8 @@ function ContactSection({ lang, t }) {
               title="Xarita"
               width="100%"
               height="320"
-              style={{ border: 0, display: "block", filter: "grayscale(1) invert(0.92) contrast(0.9)" }}
+              className="map-frame"
+              style={{ border: 0, display: "block" }}
               loading="lazy"
               allowFullScreen
             />
