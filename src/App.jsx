@@ -43,7 +43,7 @@ const CONTACT = {
 };
 
 /* ===== LAUNCH SOZLAMALARI — real kontent tayyor bo'lganda yoqiladi ===== */
-const SHOW_STATS = false;    // real raqamlar kiritilgach true qiling (L.uz/ru ichida "stats")
+const SHOW_STATS = true;     // raqamlar shartli — realini L.uz/ru ichidagi "stats" da yangilang
 const SHOW_REVIEWS = false;  // real mijoz sharhlari qo'shilgach true qiling
 const TG_BOT = "";           // masalan "BKSOrderBot" — bo'lsa buyurtma botga yo'naladi
 const GALLERY = [];          // fotolar: { src: "/img/zavod.webp", uz: "Zavod", ru: "Завод" }
@@ -98,6 +98,14 @@ const L = {
     calcMsgIntro: "Assalomu alaykum! Beton buyurtma bermoqchiman:",
     calcMsgVol: "Kerakli hajm",
     unitNames: { m: "m", sm: "sm", pc: "dona" },
+    processTitle: "Qanday ishlaymiz",
+    processSub: "Buyurtmadan yetkazib berishgacha — to'rt oddiy qadam.",
+    process: [
+      { title: "Murojaat", desc: "Telefon yoki Telegram orqali buyurtma qoldirasiz — kalkulyator hisobini ham yuborishingiz mumkin." },
+      { title: "Hisob-kitob", desc: "Menejer hajm, marka va narxni siz bilan kelishib oladi." },
+      { title: "Tayyorlash", desc: "Buyurtmangiz kelishilgan muddatga tayyorlanadi." },
+      { title: "Yetkazib berish", desc: "O'z transportimizda kelishilgan manzilga yetkazamiz." },
+    ],
     whyTitle: "Nega aynan biz?",
     whys: [
       { title: "Hammasi bir joyda", desc: "Sement, tayyor beton, beton buyumlar va inert materiallar — bitta manzil, bitta qo'ng'iroq." },
@@ -166,6 +174,14 @@ const L = {
     calcMsgIntro: "Здравствуйте! Хочу заказать бетон:",
     calcMsgVol: "Необходимый объём",
     unitNames: { m: "м", sm: "см", pc: "шт" },
+    processTitle: "Как мы работаем",
+    processSub: "От заказа до доставки — четыре простых шага.",
+    process: [
+      { title: "Обращение", desc: "Оставляете заказ по телефону или в Telegram — можно сразу отправить расчёт из калькулятора." },
+      { title: "Расчёт", desc: "Менеджер согласует с вами объём, марку и цену." },
+      { title: "Подготовка", desc: "Заказ готовится к согласованному сроку." },
+      { title: "Доставка", desc: "Доставим собственным транспортом по согласованному адресу." },
+    ],
     whyTitle: "Почему именно мы?",
     whys: [
       { title: "Всё в одном месте", desc: "Цемент, готовый бетон, ЖБИ и инертные материалы — один адрес, один звонок." },
@@ -214,9 +230,18 @@ const CATS = [
 const PRODUCTS = [
   { cat: "cement", uz: "Portland sement M400", ru: "Портландцемент М400", duz: "Fundament, stiyajka, umumiy qurilish ishlari", dru: "Фундамент, стяжка, общестроительные работы" },
   { cat: "cement", uz: "Portland sement M500", ru: "Портландцемент М500", duz: "Yuqori mustahkamlik talab qilinadigan konstruksiyalar", dru: "Конструкции повышенной прочности" },
+  { cat: "beton", uz: "Beton M100 (B7.5)", ru: "Бетон М100 (B7.5)", duz: "Tayyorgarlik qatlami, beton yostiq, yo'l asosi", dru: "Подготовительный слой, подбетонка, основание дорог" },
+  { cat: "beton", uz: "Beton M150 (B12.5)", ru: "Бетон М150 (B12.5)", duz: "Yo'lakcha, stiyajka, yengil konstruksiyalar", dru: "Дорожки, стяжка, лёгкие конструкции" },
   { cat: "beton", uz: "Beton M200 (B15)", ru: "Бетон М200 (B15)", duz: "Pol, maydoncha, yo'lakcha, yengil fundament", dru: "Полы, площадки, дорожки, лёгкий фундамент" },
   { cat: "beton", uz: "Beton M250 (B20)", ru: "Бетон М250 (B20)", duz: "Fundament, plita, devor asoslari", dru: "Фундаменты, плиты, основания стен" },
-  { cat: "beton", uz: "Beton M300 (B22.5)", ru: "Бетон М300 (B22.5)", duz: "Ustunlar, yuk ko'taruvchi konstruksiyalar, zinapoyalar", dru: "Колонны, несущие конструкции, лестницы" },
+  { cat: "beton", uz: "Beton M300 (B22.5)", ru: "Бетон М300 (B22.5)", duz: "Monolit, ustunlar, zinapoyalar", dru: "Монолит, колонны, лестницы" },
+  { cat: "beton", uz: "Beton M350 (B25)", ru: "Бетон М350 (B25)", duz: "Yuk ko'taruvchi konstruksiyalar, plitalar, hovuzlar", dru: "Несущие конструкции, плиты перекрытий, бассейны" },
+  { cat: "beton", uz: "Beton M400 (B30)", ru: "Бетон М400 (B30)", duz: "Ko'p qavatli binolar, ko'prik konstruksiyalari", dru: "Многоэтажные здания, мостовые конструкции" },
+  { cat: "beton", uz: "Beton M450 (B35)", ru: "Бетон М450 (B35)", duz: "Gidrotexnik inshootlar, to'g'onlar", dru: "Гидротехнические сооружения, дамбы" },
+  { cat: "beton", uz: "Beton M500 (B40)", ru: "Бетон М500 (B40)", duz: "Maxsus mustahkam konstruksiyalar, kolonnalar", dru: "Особо прочные конструкции, колонны" },
+  { cat: "beton", uz: "Beton M600 (B45)", ru: "Бетон М600 (B45)", duz: "Og'ir yuklamali sanoat inshootlari", dru: "Промышленные объекты с высокой нагрузкой" },
+  { cat: "beton", uz: "Beton M700 (B50)", ru: "Бетон М700 (B50)", duz: "Infratuzilma va maxsus obyektlar", dru: "Инфраструктурные и специальные объекты" },
+  { cat: "beton", uz: "Beton M800 (B60)", ru: "Бетон М800 (B60)", duz: "Eng yuqori mustahkamlik talab qilinadigan obyektlar", dru: "Объекты с максимальными требованиями к прочности" },
   { cat: "jbi", uz: "Sement blok 20×20×40", ru: "Цементоблок 20×20×40", duz: "Devor, to'siq, xo'jalik inshootlari", dru: "Стены, ограждения, хозпостройки" },
   { cat: "jbi", uz: "Peskoblok", ru: "Пескоблок", duz: "Devor va to'siqlar uchun yengil, arzon variant", dru: "Лёгкий и доступный вариант для стен и оград" },
   { cat: "jbi", uz: "Bordyur", ru: "Бордюр", duz: "Yo'l va trotuar chegaralari", dru: "Ограждение дорог и тротуаров" },
@@ -794,6 +819,9 @@ export default function BKSSite() {
       {/* ================= KALKULYATOR ================= */}
       <CalculatorSection lang={lang} t={t} />
 
+      {/* ================= QANDAY ISHLAYMIZ ================= */}
+      <ProcessSection t={t} />
+
       {/* ================= NEGA BIZ ================= */}
       <WhySection t={t} />
 
@@ -1086,6 +1114,44 @@ function CatalogSection({ lang, t }) {
                 {copiedIdx === i ? "✓" : t.orderBtn}
               </button>
             </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- QANDAY ISHLAYMIZ (jarayon qadamlari) ---------- */
+function ProcessSection({ t }) {
+  return (
+    <section style={{ background: T.ink, borderTop: `1px solid ${T.line}` }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <h2 className="sec-title font-black mb-3" style={{ fontFamily: F.display, fontSize: "clamp(1.6rem, 4vw, 2.6rem)", color: T.text }}>
+          {t.processTitle}
+        </h2>
+        <p className="max-w-xl text-sm sm:text-base mb-10" style={{ color: T.muted }}>{t.processSub}</p>
+        <div data-reveal className="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {t.process.map((p, i) => (
+            <div
+              key={i}
+              className="card-lift relative rounded-2xl p-5 sm:p-6 overflow-hidden"
+              style={{ background: T.surface, border: `1px solid ${T.line}` }}
+            >
+              {/* qadam raqami */}
+              <div className="gold-text text-4xl font-black mb-4 select-none" style={{ fontFamily: F.mono }}>
+                {String(i + 1).padStart(2, "0")}
+              </div>
+              {/* keyingi qadamga strelka (oxirgisidan tashqari) */}
+              {i < t.process.length - 1 && (
+                <span className="absolute top-6 right-5 hidden lg:block" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.gold} strokeWidth="2" opacity="0.55">
+                    <path d="M4 12h15M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              )}
+              <h3 className="font-bold mb-1.5" style={{ color: T.text }}>{p.title}</h3>
+              <p className="text-sm" style={{ color: T.muted }}>{p.desc}</p>
+            </div>
           ))}
         </div>
       </div>
