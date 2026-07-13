@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { T, F } from "../theme.js";
 
 /* ---------- NAVBAR (logo, navigatsiya, til, rejim, CTA) ---------- */
@@ -12,19 +13,19 @@ export function Header({ lang, setLang, theme, toggleTheme, t, navItems }) {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <a href="#top" className="flex flex-col leading-none" style={{ textDecoration: "none" }}>
+        <Link to="/" className="flex flex-col leading-none" style={{ textDecoration: "none" }}>
           <span className="gold-text text-2xl font-black tracking-tight" style={{ fontFamily: F.display }}>
             BKS
           </span>
           <span className="mt-0.5" style={{ color: T.muted, fontSize: 9, letterSpacing: "0.28em" }}>
             BETON KLASS SAVDO
           </span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
           {navItems.map((it) => (
-            <a key={it.href} href={it.href} className="nav-link">{it.label}</a>
+            <Link key={it.to} to={it.to} className="nav-link">{it.label}</Link>
           ))}
         </nav>
 
@@ -76,9 +77,9 @@ export function Header({ lang, setLang, theme, toggleTheme, t, navItems }) {
             )}
           </button>
 
-          <a href="#contact" className="btn-gold hidden sm:inline-block rounded-lg px-4 py-2 text-sm font-bold" style={{ textDecoration: "none" }}>
+          <Link to="/#contact" className="btn-gold hidden sm:inline-block rounded-lg px-4 py-2 text-sm font-bold" style={{ textDecoration: "none" }}>
             {t.navCta}
-          </a>
+          </Link>
 
           {/* Mobil menyu tugmasi */}
           <button
@@ -102,11 +103,11 @@ export function Header({ lang, setLang, theme, toggleTheme, t, navItems }) {
         <nav className="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium" style={{ borderTop: `1px solid ${T.line}` }}>
           <div className="pt-3" />
           {navItems.map((it) => (
-            <a key={it.href} href={it.href} className="nav-link py-2" onClick={() => setMenuOpen(false)}>{it.label}</a>
+            <Link key={it.to} to={it.to} className="nav-link py-2" onClick={() => setMenuOpen(false)}>{it.label}</Link>
           ))}
-          <a href="#contact" className="btn-gold rounded-lg px-4 py-2.5 text-center font-bold mt-1" style={{ textDecoration: "none" }}>
+          <Link to="/#contact" className="btn-gold rounded-lg px-4 py-2.5 text-center font-bold mt-1" style={{ textDecoration: "none" }} onClick={() => setMenuOpen(false)}>
             {t.navCta}
-          </a>
+          </Link>
         </nav>
       )}
     </header>

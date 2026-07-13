@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { T, F } from "../theme.js";
 import { REQUISITES } from "../config.js";
 
@@ -20,7 +21,7 @@ export function Footer({ t, navItems }) {
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
           {navItems.map((it) => (
-            <a key={it.href} href={it.href} className="nav-link">{it.label}</a>
+            <Link key={it.to} to={it.to} className="nav-link">{it.label}</Link>
           ))}
         </nav>
       </div>

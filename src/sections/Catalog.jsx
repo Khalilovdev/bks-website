@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { T, F, goldA } from "../theme.js";
 import { CATS, PRODUCTS } from "../data/products.js";
 import { sendOrder } from "../lib/order.js";
@@ -94,12 +95,21 @@ export function CatalogSection({ lang, t }) {
               <p className="text-sm flex-1 mb-5" style={{ color: T.muted }}>
                 {lang === "uz" ? p.duz : p.dru}
               </p>
-              <button
-                onClick={() => orderProduct(p)}
-                className="btn-ghost w-full rounded-lg px-4 py-2.5 text-sm font-bold"
-              >
-                {copiedId === p.uz ? "✓" : t.orderBtn}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => orderProduct(p)}
+                  className="btn-ghost flex-1 rounded-lg px-4 py-2.5 text-sm font-bold"
+                >
+                  {copiedId === p.uz ? "✓" : t.orderBtn}
+                </button>
+                <Link
+                  to={`/product/${p.slug}`}
+                  className="btn-ghost rounded-lg px-4 py-2.5 text-sm font-bold flex items-center"
+                  style={{ textDecoration: "none" }}
+                >
+                  {t.detailMore} →
+                </Link>
+              </div>
             </article>
           ))}
         </div>
