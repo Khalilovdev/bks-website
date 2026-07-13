@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Domen ulangach quyidagi qatorni yoqing (# ni olib tashlab, domenni yozing):
+# Sitemap: https://SIZNING-DOMENINGIZ.uz/sitemap.xml
