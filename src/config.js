@@ -17,7 +17,9 @@ export const SHOW_REVIEWS = false;  // real mijoz sharhlari qo'shilgach true qil
 export const TG_BOT = "";           // masalan "BKSOrderBot" — bo'lsa buyurtma botga yo'naladi
 export const GALLERY = [];          // fotolar: { src: "/img/zavod.webp", uz: "Zavod", ru: "Завод" }
 export const REQUISITES = "";       // masalan: "BETON KLASS SAVDO MChJ · STIR 123 456 789"
-export const MAP_EMBED = "";        // Google Maps embed havolasi (Ulashish → Xaritani joylash)
+/* Xarita: zavod joylashuvi (39.7182383, 66.9560666 — Samarqand) */
+export const MAP_COORDS = { lat: 39.7182383, lng: 66.9560666 };
+export const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_COORDS.lat},${MAP_COORDS.lng}&z=16&output=embed`;
 
 /* To'liq avtomat forma: serverless endpoint (serverless/telegram-worker.js ni
    deploy qilib URL'ini shu yerga yozing). Bo'sh bo'lsa — Telegram chat oqimi. */
