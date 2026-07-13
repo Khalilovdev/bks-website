@@ -19,15 +19,39 @@
       html { background: #0e0e0e; }
       html[data-theme="light"] { background: #f6f4ef; }
     </style>
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230e0e0e'/%3E%3Ctext x='32' y='45' font-family='Arial,sans-serif' font-size='38' font-weight='900' fill='%23f5a623' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" />
     <title>Beton Klass Savdo — Sement va beton mahsulotlari | Samarqand</title>
     <meta name="description" content="Sement, tayyor beton, beton buyumlar va inert materiallar — Samarqandda. Hajm kalkulyatori, Telegram orqali tezkor buyurtma." />
-    <!-- OG teglar — deploy'dan keyin real URL bilan to'ldiriladi -->
+
+    <!-- Open Graph — Telegram/ijtimoiy tarmoqlarda havola kartasi -->
     <meta property="og:title" content="Beton Klass Savdo" />
-    <meta property="og:description" content="Sement va beton mahsulotlari — Samarqand" />
+    <meta property="og:description" content="Sement va beton mahsulotlari — Samarqand. Hajm kalkulyatori, tezkor buyurtma." />
     <meta property="og:type" content="website" />
-    <!-- Tailwind Play CDN — kichik landing uchun yetarli -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MUHIM: domen ulangach quyidagi ikki qatorni yoqing (og:image mutlaq URL talab qiladi): -->
+    <!-- <meta property="og:url" content="https://SIZNING-DOMENINGIZ.uz/" /> -->
+    <!-- <meta property="og:image" content="https://SIZNING-DOMENINGIZ.uz/og-cover.png" /> -->
+
+    <!-- Lokal SEO: Google uchun strukturali ma'lumot.
+         TODO: telefon/manzil realligini tasdiqlang, domen ulangach "url" qo'shing. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Beton Klass Savdo",
+      "description": "Sement, tayyor beton, beton buyumlar va inert materiallar — Samarqandda.",
+      "telephone": "+998932970700",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Samarqand",
+        "addressCountry": "UZ"
+      },
+      "openingHours": "Mo-Su 08:00-20:00",
+      "priceRange": "$$",
+      "sameAs": ["https://t.me/betonklasssavdo"]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
