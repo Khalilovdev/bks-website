@@ -38,12 +38,17 @@
         @media (prefers-reduced-motion: reduce) { .fade-up { animation: none } }
         /* Hero shrifti: eng uzun so'z («VAQTIDA.» / «КАЧЕСТВО.») ustunga sig'ishi shart —
            gold-text (background-clip) ustundan chiqqan qismni ko'rinmas qilib kesadi */
-        .hero-h1 { font-size: clamp(2.8rem, 8vw, 6rem); }
-        html[lang="ru"] .hero-h1 { font-size: clamp(2.4rem, 11.5vw, 6rem); }
+        .hero-h1 { font-size: clamp(2rem, 6.4vw, 5rem); }
+        html[lang="ru"] .hero-h1 { font-size: clamp(2.05rem, 8.4vw, 5rem); }
         @media (min-width: 1024px) {
-          .hero-h1 { font-size: clamp(3rem, 7.3vw, 5.3rem); }
-          html[lang="ru"] .hero-h1 { font-size: clamp(3rem, 5.9vw, 4.25rem); }
+          .hero-h1 { font-size: clamp(2.7rem, 5vw, 3.7rem); }
+          html[lang="ru"] .hero-h1 { font-size: clamp(2.8rem, 5vw, 3.9rem); }
         }
+        /* Aylanuvchi uchinchi qator — so'zlar navbatma-navbat pastdan chiqadi */
+        .hero-rotate { white-space: nowrap; }
+        .hero-rotate-word { display: inline-block; animation: heroRot .5s cubic-bezier(.2,.7,.3,1) both; }
+        @keyframes heroRot { from { opacity: 0; transform: translateY(0.4em) } to { opacity: 1; transform: none } }
+        @media (prefers-reduced-motion: reduce) { .hero-rotate-word { animation: none } }
         .gold-text {
           background: var(--gold-grad);
           -webkit-background-clip: text; background-clip: text;

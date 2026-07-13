@@ -1,6 +1,25 @@
+import { useState, useEffect } from "react";
 import { T, F } from "../theme.js";
 import { ConcretePanel } from "../components/ConcretePanel.jsx";
 import { HeroArt } from "../components/HeroArt.jsx";
+
+/* Uchinchi qatorda so'zlar navbatma-navbat aylanib turadi
+   (o'z vaqtida → yetkazamiz → ishonchli). Reduced-motion'da birinchisi qoladi. */
+function HeroRotate({ words }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || words.length < 2) return;
+    const id = setInterval(() => setI((n) => (n + 1) % words.length), 2600);
+    return () => clearInterval(id);
+  }, [words]);
+  return (
+    <span className="hero-rotate block">
+      {/* gold-text ichki so'zda bo'lishi shart — aks holda matn shaffof qoladi */}
+      <span key={i} className="hero-rotate-word gold-text">{words[i]}</span>
+    </span>
+  );
+}
 
 /* ---------- HERO (bosh sarlavha, CTA, illyustratsiya) ---------- */
 export function Hero({ t }) {
@@ -23,10 +42,10 @@ export function Hero({ t }) {
             <span className="block" style={{ color: T.text }}>
               {t.heroLine1.replace(/\.$/, "")}<span className="gold-text">.</span>
             </span>
-            <span className="block gold-text">{t.heroLine2}</span>
             <span className="block" style={{ color: T.text }}>
-              {t.heroLine3.replace(/\.$/, "")}<span className="gold-text">.</span>
+              {t.heroLine2.replace(/\.$/, "")}<span className="gold-text">.</span>
             </span>
+            <HeroRotate words={t.heroRotate} />
           </h1>
 
           <p className="fade-up fu-3 mt-7 max-w-xl text-base sm:text-lg" style={{ color: T.muted }}>

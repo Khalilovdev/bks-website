@@ -17,10 +17,11 @@ export function CountUp({ value, suffix }) {
         if (e.isIntersecting && !done.current) {
           done.current = true;
           const t0 = performance.now();
-          const dur = 1400;
+          const dur = 2200; // sekinroq — sanash ko'zga tashlanadi
           const tick = (t) => {
             const p = Math.min((t - t0) / dur, 1);
-            setN(Math.round(value * (1 - Math.pow(1 - p, 3))));
+            // yumshoq ease-out (kvadrat) — boshidan oxirigacha bir tekis o'sadi
+            setN(Math.round(value * (1 - Math.pow(1 - p, 2))));
             if (p < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
