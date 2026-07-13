@@ -6,7 +6,7 @@ export const L = {
     heroEyebrow: "Beton Klass Savdo · Samarqand",
     heroLine1: "BETON.",
     heroLine2: "SIFAT.",
-    heroRotate: ["O'Z VAQTIDA.", "YETKAZIB.", "ISHONCHLI."],
+    heroRotate: ["O'Z VAQTIDA.", "YETKAZIB."],
     heroSub:
       "Sement, tayyor beton va beton buyumlar — buyurtmadan yetkazib berishgacha hammasi bir joyda.",
     ctaOrder: "Buyurtma berish",
@@ -90,7 +90,7 @@ export const L = {
     heroEyebrow: "Beton Klass Savdo · Самарканд",
     heroLine1: "БЕТОН.",
     heroLine2: "КАЧЕСТВО.",
-    heroRotate: ["В СРОК.", "ДОСТАВИМ.", "НАДЁЖНО."],
+    heroRotate: ["В СРОК.", "ДОСТАВИМ."],
     heroSub:
       "Цемент, готовый бетон и ЖБИ — от заказа до доставки всё в одном месте.",
     ctaOrder: "Оформить заказ",
