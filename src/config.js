@@ -17,9 +17,9 @@ export const SHOW_REVIEWS = false;  // real mijoz sharhlari qo'shilgach true qil
 export const TG_BOT = "";           // masalan "BKSOrderBot" — bo'lsa buyurtma botga yo'naladi
 export const GALLERY = [];          // fotolar: { src: "/img/zavod.webp", uz: "Zavod", ru: "Завод" }
 export const REQUISITES = "";       // masalan: "BETON KLASS SAVDO MChJ · STIR 123 456 789"
-/* Xarita: zavod joylashuvi (39.7182383, 66.9560666 — Samarqand) */
+/* Xarita: "Beton Klass Savdo" MChJ joyiga bog'langan Google Maps embed (Samarqand) */
 export const MAP_COORDS = { lat: 39.7182383, lng: 66.9560666 };
-export const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_COORDS.lat},${MAP_COORDS.lng}&z=16&output=embed`;
+export const MAP_EMBED = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3668.362747371893!2d66.95382963487064!3d39.71814749300483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f4d19fbe681496f%3A0xf54e34722f691686!2s%22Beton%20Klass%20Savdo%22%20MCHJ!5e1!3m2!1sen!2s!4v1783922808614!5m2!1sen!2s";
 
 /* To'liq avtomat forma: serverless endpoint (serverless/telegram-worker.js ni
    deploy qilib URL'ini shu yerga yozing). Bo'sh bo'lsa — Telegram chat oqimi. */
